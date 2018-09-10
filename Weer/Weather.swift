@@ -1,9 +1,8 @@
 //
 //  Weather.swift
 //  JSON
-//
-//  Created by Brian Advent on 11.05.17.
-//  Copyright © 2017 Brian Advent. All rights reserved.
+//  Created by Farlely on 10/09/2018.
+//  Copyright © 2018 Farlely. All rights reserved.
 //
 
 import Foundation
@@ -19,7 +18,6 @@ struct Weather {
         case invalid(String, Any)
     }
     
-    
     init(json:[String:Any]) throws {
         guard let summary = json["summary"] as? String else {throw SerializationError.missing("summary is missing")}
         
@@ -33,10 +31,27 @@ struct Weather {
         
     }
     
+    func formattedTemperature(unit: UnitTemperature) -> String? {
+        
+        // Convert the temperature value to
+        // the selected temperature unit
+        let farhenheit = Measurement(value: temperature,
+                                     unit: UnitTemperature.fahrenheit)
+        let convertedTemperature = farhenheit.converted(to: unit)
+        
+        // Format the temperature value to a
+        // localized string
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 1
+        let temperatureString = formatter.string(from: NSNumber(value: convertedTemperature.value))
+        
+        return temperatureString
+    }
     
-    static let basePath = "https://api.darksky.net/forecast/YOUR_APIKEY/"
+    static let basePath = "https://api.darksky.net/forecast/7e07fe509e45ecc0583c1aab41cadb33/"
     
-    static func forecast (withLocation location:CLLocationCoordinate2D, completion: @escaping ([Weather]?) -> ()) {
+    static func forecast (withLocation location: CLLocationCoordinate2D, completion: @escaping ([Weather]?) -> ()) {
         
         let url = basePath + "\(location.latitude),\(location.longitude)"
         let request = URLRequest(url: URL(string: url)!)
@@ -68,20 +83,8 @@ struct Weather {
                 
             }
             
-            
         }
         
         task.resume()
-        
-        
-        
-        
-        
-        
-        
-        
-    
     }
-    
-
 }
