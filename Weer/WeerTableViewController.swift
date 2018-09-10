@@ -13,7 +13,7 @@ class WeerTableViewController: UITableViewController,UISearchBarDelegate {
     
     @IBOutlet weak var searchBar: UISearchBar!
     
-    var selectedUnit: UnitTemperature = .kelvin {
+    var selectedUnit: UnitTemperature = .celsius {
         didSet {
             tableView.reloadData()
         }
